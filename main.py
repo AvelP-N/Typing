@@ -38,3 +38,4 @@ if __name__ == '__main__':
     print_training.run()
     print_training.result()
     print()
+    print()
