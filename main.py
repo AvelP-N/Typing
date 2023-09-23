@@ -1,6 +1,7 @@
 import time
 import keyboard
 from win32api import MessageBox
+import sqlite3 as sq
 
 
 class Typing:
