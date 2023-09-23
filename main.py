@@ -4,7 +4,19 @@ from win32api import MessageBox
 import sqlite3 as sq
 
 
-class Typing:
+class DataBase:
+    try:
+        with sq.connect(r'C:\Users\PNasonov\PycharmProjects\typing\Typing\statistics.db') as connectDB:
+            cursor = connectDB.cursor()
+    except sq.OperationalError as error:
+        print(str(error).capitalize())
+
+    def show_data_db(self):
+        self.cursor.execute('''SELECT * FROM info_typing''').fetchall()
+        print(self.cursor.fetchall())
+
+
+class Typing(DataBase):
     def __init__(self):
         self.count_error = 0
         self.time_start = time.time()
@@ -57,3 +69,4 @@ if __name__ == '__main__':
     print_training.info()
     print_training.run()
     print_training.result()
+    print_training.show_data_db()
