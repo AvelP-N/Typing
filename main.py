@@ -12,8 +12,14 @@ class DataBase:
     try:
         with sq.connect(r'statistics.db') as connectDB:
             cursor = connectDB.cursor()
+            cursor.execute('''CREATE TABLE IF NOT EXISTS info_typing (
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                date TEXT,
+                                time_spent TEXT,
+                                print_speed INTEGER,
+                                count_error INTEGER);''')
     except sq.OperationalError as error:
-        print(f'{Fore.RED}str(error).capitalize()')
+        print(f'{Fore.RED}{str(error).capitalize()}')
 
     def write_database(self, date, time_spent, print_speed, count_error):
         """Write the final result to the database"""
@@ -120,4 +126,4 @@ if __name__ == '__main__':
                                   print_training.count_error)
     print_training.show_data_db()
 
-    quit(input(f'\n{Fore.YELLOW}Press "Enter" to exit the program'))
+    quit(input(f'\n{Fore.YELLOW}Press "Enter" to exit the program...'))
