@@ -1,5 +1,4 @@
 import time
-import logging
 import keyboard
 import sqlite3 as sq
 from tabulate import tabulate
