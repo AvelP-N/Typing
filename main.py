@@ -18,21 +18,26 @@ class DataBase:
                                 time_spent TEXT,
                                 print_speed INTEGER,
                                 count_error INTEGER);''')
-    except sq.OperationalError as error:
+    except sq.Error as error:
         print(f'{Fore.RED}{str(error).capitalize()}')
 
     def write_database(self, date, time_spent, print_speed, count_error):
         """Write the final result to the database"""
 
-        self.cursor.execute(f'''INSERT INTO info_typing (date, time_spent, print_speed, count_error)
-                                VALUES ('{date}', '{time_spent}', {print_speed}, {count_error})''')
-        self.connectDB.commit()
+        try:
+            self.cursor.execute(f'''INSERT INTO info_typing (date, time_spent, print_speed, count_error)
+                                    VALUES ('{date}', '{time_spent}', {print_speed}, {count_error})''')
+            self.connectDB.commit()
+        except sq.Error as error:
+            print(f'{Fore.RED}{str(error).capitalize()}')
 
     def read_database(self):
         """Return all results from the database"""
-
-        data = self.cursor.execute('''SELECT * FROM info_typing''')
-        return data
+        try:
+            data = self.cursor.execute('''SELECT * FROM info_typing''')
+            return data
+        except sq.Error as error:
+            print(f'{Fore.RED}{str(error).capitalize()}')
 
 
 class Typing(DataBase):
@@ -120,10 +125,16 @@ if __name__ == '__main__':
     print_training = Typing()
     print_training.console_decoration()
     print_training.info()
-    print_training.run()
-    print_training.result()
-    print_training.write_database(time.strftime('%X %x'), print_training.final_result_time, print_training.speed_typing,
-                                  print_training.count_error)
-    print_training.show_data_db()
 
-    quit(input(f'\n{Fore.YELLOW}Press "Enter" to exit the program...'))
+    try:
+        print_training.run()
+    except KeyboardInterrupt:
+        print(f'\n{Fore.RED}Press Ctrl+C or Ctrl+Break in console!')
+    else:
+        print_training.result()
+        print_training.write_database(time.strftime('%X %x'), print_training.final_result_time,
+                                      print_training.speed_typing, print_training.count_error)
+        print_training.show_data_db()
+    finally:
+        keyboard.unhook_all()
+        input(f'\n{Fore.YELLOW}Press "Enter" to exit the program...')
